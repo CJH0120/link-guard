@@ -1,0 +1,54 @@
+.url-box-wrap {
+	width: 100%;
+	display: flex;
+	flex: 0 0 auto;
+	padding: 8px 15px;
+	box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+	transition: scale 0.2s ease-in-out;
+	backdrop-filter: blur(10px);
+	// background-color: #fff;
+	border-radius: 4px;
+	height: 80px;
+	align-items: center;
+	justify-content: center;
+	transition: transform 0.2s ease-in-out;
+	cursor: pointer;
+	&:hover {
+		transform: translate(0, -5px);
+		z-index: 999;
+		color: #2c7498;
+	}
+	.url-box {
+		display: flex;
+		align-items: center;
+		gap: 50px;
+		width: 100%;
+		.url-title-wrap {
+			width: 100%;
+		}
+		.url-title {
+			justify-content: center;
+			font-size: 1.2rem;
+			width: 100%;
+			display: flex;
+			flex: 0 0 auto;
+		}
+		.url-button {
+			width: 30px;
+			height: 30px;
+			padding: 0.2rem;
+			display: flex;
+			border-radius: 100%;
+			justify-content: center;
+			align-items: center;
+			overflow: hidden;
+			flex: 0 0 auto;
+			&:hover {
+				background: rgba(#000000, 0.05);
+			}
+			&:active {
+				background: rgba(#000000, 0.1);
+			}
+		}
+	}
+}

@@ -1,4 +1,5 @@
-import { createPool, Pool, RowDataPacket } from "mysql2"
+// lib/db.ts
+import { createPool, Pool, RowDataPacket } from "mysql2/promise"
 
 // MySQL 연결 풀 생성
 const pool: Pool = createPool({
@@ -7,35 +8,24 @@ const pool: Pool = createPool({
 	password: process.env.DB_PASSWORD,
 	database: process.env.DB_DATABASE,
 	port: 3306,
+	waitForConnections: true,
 	connectionLimit: 10,
 	queueLimit: 0,
 })
 
-const executeQuery = <T,>(
+// 쿼리 실행 함수
+export const executeQuery = async <T,>(
 	query: string,
-	arrParams: any[] = []
+	params: any[] = []
 ): Promise<T[]> => {
-	return new Promise((resolve, reject) => {
-		pool.getConnection((err, conn) => {
-			if (err) {
-				console.error("연결 가져오기 오류:", err)
-				reject(err)
-				return
-			}
-
-			conn.query(query, arrParams, (err, data: RowDataPacket[]) => {
-				conn.release()
-
-				if (err) {
-					console.error("쿼리 실행 오류:", err)
-					reject(err)
-				} else {
-					// RowDataPacket[]을 제네릭 T[]로 변환
-					resolve(data as unknown as T[])
-				}
-			})
-		})
-	})
+	const connection = await pool.getConnection()
+	try {
+		const [rows] = await connection.query<RowDataPacket[]>(query, params)
+		return rows as unknown as T[]
+	} catch (error) {
+		console.error("쿼리 실행 오류:", error)
+		throw error
+	} finally {
+		connection.release()
+	}
 }
-
-export default executeQuery

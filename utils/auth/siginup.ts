@@ -1,4 +1,4 @@
-import executeQuery from "@/lib/db"
+import { executeQuery } from "@/lib/db"
 import { User } from "next-auth"
 
 export const signUp = async ({ id, email, image, name }: User) => {

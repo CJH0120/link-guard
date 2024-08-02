@@ -1,0 +1,64 @@
+.user_page {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	flex: 1;
+	justify-content: space-between;
+	flex-direction: column;
+	max-width: 600px;
+	padding: 15px 0;
+	.page-container {
+		width: 100%;
+		padding: 0 8px;
+	}
+	.header_wrap {
+		width: 100%;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 16px;
+		.member {
+			font-size: 1.5rem;
+			background-clip: text;
+			color: transparent;
+			background-image: linear-gradient(to right, #314755, #26a0da);
+			font-weight: 800;
+		}
+		.button-wrap {
+			display: flex;
+			border-radius: 100%;
+			overflow: hidden;
+			flex: 0 0 auto;
+			justify-content: center;
+			align-items: center;
+			padding: 0.2rem;
+			&:hover {
+				background: rgba(#000000, 0.05);
+			}
+			&:active {
+				background: rgba(#000000, 0.1);
+			}
+			.icon {
+				color: #2c7498;
+				font-size: 1.5rem;
+			}
+		}
+	}
+	.content-container {
+		display: flex;
+		flex: 0 0 auto;
+		padding: 1rem 0;
+		width: 100%;
+		flex-direction: column;
+		gap: 0.8rem;
+	}
+
+	.user-join {
+		position: sticky;
+		bottom: 0px;
+		height: 100px;
+		width: 100%;
+		backdrop-filter: blur(10px);
+		background: rgba(0, 0, 0, 0.2);
+	}
+}

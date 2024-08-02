@@ -1,0 +1,19 @@
+.modal-wrap {
+	width: 100vw;
+	display: grid;
+	grid-template-rows: 1fr;
+	min-height: 100vh;
+	z-index: 999;
+	backdrop-filter: blur(10px);
+	position: fixed;
+	top: 0;
+	left: 0;
+	background: transparent;
+	border: none;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	.modal {
+		padding: 15px;
+	}
+}
