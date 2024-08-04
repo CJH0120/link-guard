@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation"
 
-const GOOGLE_REDIRECT_URI = "http://localhost:3000/api/auth/login/redirect"
+const GOOGLE_REDIRECT_URI = `${process.env.BASE_URL}/api/auth/login/redirect`
 
 export function GET() {
 	const clientId = process.env.GOOGLE_CLIENT_ID
