@@ -29,22 +29,6 @@ export async function GET(request: Request) {
       return NextResponse.redirect(new URL('/', BASE_URL));
     }
 
-<<<<<<< HEAD
-		const response = await fetch("https://oauth2.googleapis.com/token", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/x-www-form-urlencoded",
-			},
-			body: new URLSearchParams({
-				code,
-				client_id: process.env.GOOGLE_CLIENT_ID!,
-				client_secret: process.env.GOOGLE_CLIENT_SECRET!,
-				redirect_uri: GOOGLE_REDIRECT_URI,
-				grant_type: "authorization_code",
-			}),
-		})
-		const data: TokenResponse = (await response.json()) as TokenResponse
-=======
     const response = await fetch('https://oauth2.googleapis.com/token', {
       method: 'POST',
       headers: {
@@ -59,36 +43,18 @@ export async function GET(request: Request) {
       }),
     });
     const data: TokenResponse = await response.json();
->>>>>>> 7fedaaa (FEAT : 기능 추가)
 
     if (data.error) {
       console.error('Token Response Error:', data.error_description);
       return NextResponse.json({ error: data.error_description }, { status: 400 });
     }
 
-<<<<<<< HEAD
-		const userInfoResponse = await fetch(
-			"https://www.googleapis.com/oauth2/v3/userinfo",
-			{
-				headers: {
-					Authorization: `Bearer ${data.access_token}`,
-				},
-			}
-		)
-		const userInfo: { sub: string; name: string; email: string } =
-			(await userInfoResponse.json()) as {
-				sub: string
-				name: string
-				email: string
-			}
-=======
     const userInfoResponse = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
       headers: {
         Authorization: `Bearer ${data.access_token}`,
       },
     });
     const userInfo: { sub: string; name: string; email: string } = await userInfoResponse.json();
->>>>>>> 7fedaaa (FEAT : 기능 추가)
 
     const member = await isMember({ google_id: userInfo.sub });
     if (!member) {
