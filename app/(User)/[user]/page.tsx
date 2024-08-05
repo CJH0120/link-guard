@@ -18,7 +18,9 @@ type MemberProps = { member: Member.info; data: Link.info[] };
 type Combine = MemberProps & { owner: boolean };
 const cx = classNames.bind(style);
 const getMemberData = async (userId: string): Promise<Combine> => {
-  const memberData: MemberProps = await fetch(`${BASE_URL}/api/auth/member/${userId}`, {}).then((res) => res.json());
+  const memberData: MemberProps = await fetch(`${BASE_URL}/api/auth/member/${userId}`, { cache: 'force-cache' }).then(
+    (res) => res.json()
+  );
   const response = await useVerify();
 
   if (!response) {
@@ -40,6 +42,7 @@ const UserPage = async ({ params }: { params: { user: string } }) => {
   if (!member?.nickname && owner) {
     return <MemberEdit {...member} key={member.id} />;
   }
+
   return (
     <div className={cx('user_page')}>
       <div className={cx('page-container')}>
