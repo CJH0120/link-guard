@@ -87,6 +87,7 @@ export async function PUT(request: Request) {
 
   try {
     await executeQuery(`UPDATE member SET nickname = ? WHERE google_id = ?`, [nickname, id]);
+    revalidatePath(`/${id}`);
     return NextResponse.json({ status: 'updated' });
   } catch (error) {
     return NextResponse.json({ error: '잠시후에 다시 시도 해주세요' }, { status: 500 });
