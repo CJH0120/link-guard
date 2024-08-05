@@ -4,7 +4,7 @@ import { useEffect } from "react"
 
 const ErrorPage = () => {
 	useEffect(() => {
-		alert("error")
+		console.error("ErrorPage")
 	}, [])
 	return null
 }

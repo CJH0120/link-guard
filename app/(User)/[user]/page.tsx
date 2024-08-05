@@ -1,64 +1,64 @@
-import { Link, Member } from "@/interface/api"
-import classNames from "classnames/bind"
-import style from "./page.module.scss"
-import { notFound } from "next/navigation"
-import Button from "@/components/button"
-import { IconMenu } from "@/components/icons/ic-menu"
-import UrlBox from "@/components/urlBox"
-import Modal from "@/components/modal"
-import { cookies } from "next/headers"
-import MemberEdit from "./memberEdit"
-import { useMemo } from "react"
+/* eslint-disable react-hooks/rules-of-hooks */
+import { Link, Member } from '@/interface/api';
+import classNames from 'classnames/bind';
+import style from './page.module.scss';
+import Button from '@/components/button';
+import { IconMenu } from '@/components/icons/ic-menu';
+import UrlBox from '@/components/urlBox';
+import { BASE_URL } from '@/config';
+import { useVerify } from '@/utils/auth/verify';
+import UserInfo from '@/components/useInfo';
+import MemberEdit from './edit/memberEdit';
+import { notFound } from 'next/navigation';
 
-export const dynamic = "force-dynamic"
-export const revalidate = 0
-type MemberProps = { member: Member.info; data: Link.info[] }
-const isMember = async (google_id: string): Promise<MemberProps> => {
-	try {
-		const response = await fetch(
-			`${process.env.BASE_URL}/api/auth/member/${google_id}`
-		)
-		if (!response.ok) {
-			throw new Error("Network response was not ok")
-		}
-		const result: MemberProps = await response.json()
-		return result
-	} catch (error) {
-		console.error("Error fetching member status:", error)
-		return notFound()
-	}
-}
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
-const cx = classNames.bind(style)
+type MemberProps = { member: Member.info; data: Link.info[] };
+type Combine = MemberProps & { owner: boolean };
+const cx = classNames.bind(style);
+const getMemberData = async (userId: string): Promise<Combine> => {
+  const memberData: MemberProps = await fetch(`${BASE_URL}/api/auth/member/${userId}`, {}).then((res) => res.json());
+  const response = await useVerify();
+
+  if (!response) {
+    return { ...memberData, owner: false };
+  }
+
+  const userData: Member.info = await response.json();
+  return { ...memberData, owner: userId === userData.google_id };
+};
+
 const UserPage = async ({ params }: { params: { user: string } }) => {
-	const userId = params.user
-	const { member, data } = await isMember(userId)
-	if (!member.nickname) {
-		return <MemberEdit id={userId} />
-	}
+  const userId = params.user;
+  const pageData = await getMemberData(userId);
+  const { data, member, owner } = pageData;
 
-	return (
-		<div className={cx("user_page")}>
-			<div className={cx("page-container")}>
-				<div className={cx("header_wrap")}>
-					<div />
-					<h1 className={cx("member")}>
-						Link Guard
-						{/* {member?.google_id} */}
-					</h1>
-					<Button className={cx("button-wrap")}>
-						<IconMenu className={cx("icon")} />
-					</Button>
-				</div>
+  if (!member?.id) {
+    return notFound();
+  }
+  if (!member?.nickname && owner) {
+    return <MemberEdit {...member} key={member.id} />;
+  }
+  return (
+    <div className={cx('user_page')}>
+      <div className={cx('page-container')}>
+        <div className={cx('header_wrap')}>
+          <div />
+          <h1 className={cx('member')}>Link Guard</h1>
+          <Button className={cx('button-wrap')}>
+            <IconMenu className={cx('icon')} />
+          </Button>
+        </div>
+        <UserInfo owner={owner} {...member} />
+        <div className={cx('content-container')}>
+          {data?.map((link) => (
+            <UrlBox {...link} key={link.id} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
 
-				<div className={cx("content-container")}>
-					{data?.map((v) => (
-						<UrlBox {...v} key={v.id} />
-					))}
-				</div>
-			</div>
-		</div>
-	)
-}
-
-export default UserPage
+export default UserPage;
