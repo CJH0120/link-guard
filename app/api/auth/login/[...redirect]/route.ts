@@ -42,7 +42,7 @@ export async function GET(request: Request) {
         grant_type: 'authorization_code',
       }),
     });
-    const data: TokenResponse = await response.json();
+    const data: TokenResponse = (await response.json()) as TokenResponse;
 
     if (data.error) {
       console.error('Token Response Error:', data.error_description);
@@ -54,7 +54,11 @@ export async function GET(request: Request) {
         Authorization: `Bearer ${data.access_token}`,
       },
     });
-    const userInfo: { sub: string; name: string; email: string } = await userInfoResponse.json();
+    const userInfo: { sub: string; name: string; email: string } = (await userInfoResponse.json()) as {
+      sub: string;
+      name: string;
+      email: string;
+    };
 
     const member = await isMember({ google_id: userInfo.sub });
     if (!member) {
